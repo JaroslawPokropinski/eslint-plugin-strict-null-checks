@@ -6,7 +6,10 @@ import {
 } from "@typescript-eslint/type-utils";
 
 export const RULE_NAME = "all";
-export type MessageIds = "safeMemberAccess" | "safeDeclaration";
+export type MessageIds =
+  | "safeMemberAccess"
+  | "safeDeclaration"
+  | "safeFunctionArguments";
 export type Options = [];
 
 export default createEslintRule<Options, MessageIds>({
@@ -20,9 +23,11 @@ export default createEslintRule<Options, MessageIds>({
     schema: [],
     messages: {
       safeMemberAccess:
-        "Accessing member of possibly nullable variable should be done using chain expression (?.)",
+        "Accessing member of nullable variable should be done using chain expression (?.)",
       safeDeclaration:
-        "Assigning possibly nullable value to non nullable variable (you may use ?? for default value)",
+        "Assigning nullable value to non nullable variable (you may use ?? for default value)",
+      safeFunctionArguments:
+        "Passing nullable argument to function that expects non nullable",
     },
   },
   defaultOptions: [],
@@ -68,6 +73,40 @@ export default createEslintRule<Options, MessageIds>({
             loc: node.id.loc,
           });
         }
+      },
+      CallExpression(node) {
+        const originalNode = parserServices.esTreeNodeToTSNodeMap.get(node);
+        const expressionType = getConstrainedTypeAtLocation(
+          checker,
+          originalNode.expression
+        );
+        const signatures = expressionType.getCallSignatures();
+        if (signatures.length !== 1) return;
+
+        const paramsInSig = signatures[0].getParameters();
+
+        const nullableSig = paramsInSig.map((p) => {
+          const paramType = getConstrainedTypeAtLocation(
+            checker,
+            p.declarations[0]
+          );
+          return isNullableType(paramType);
+        });
+
+        const argTypes = originalNode.arguments.map((arg) =>
+          getConstrainedTypeAtLocation(checker, arg)
+        );
+
+        const nullableParam = argTypes.map((arg) => isNullableType(arg));
+
+        nullableSig.forEach((ns, i) => {
+          if (!ns && nullableParam[i]) {
+            context.report({
+              messageId: "safeFunctionArguments",
+              loc: node.arguments[i].loc,
+            });
+          }
+        });
       },
     };
   },
