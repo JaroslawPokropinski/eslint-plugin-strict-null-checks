@@ -1,16 +1,13 @@
-import { RuleTester } from '@typescript-eslint/utils/dist/ts-eslint';
-import path from 'path';
-import rule, {
-  MessageIds,
-  RULE_NAME,
-} from '../../src/rules/readonly-injectables';
+import { RuleTester } from "@typescript-eslint/utils/dist/ts-eslint";
+import path from "path";
+import rule, { MessageIds, RULE_NAME } from "../../src/rules/all";
 
-const root = path.resolve(path.join(__dirname, '../'));
+const root = path.resolve(path.join(__dirname, "../"));
 
 const ruleTester: RuleTester = new RuleTester({
-  parser: require.resolve('@typescript-eslint/parser'),
+  parser: require.resolve("@typescript-eslint/parser"),
   parserOptions: {
-    project: './tsconfig.json',
+    project: "./tsconfig.json",
     tsconfigRootDir: root,
   },
 });
@@ -49,11 +46,11 @@ const invalidStatemetsDeclaration = [
 const invalid = [
   ...invalidStatemetsMemberAccess.map((st) => ({
     code: st,
-    errors: [{ messageId: 'safeMemberAccess' as MessageIds }],
+    errors: [{ messageId: "safeMemberAccess" as MessageIds }],
   })),
   ...invalidStatemetsDeclaration.map((st) => ({
     code: st,
-    errors: [{ messageId: 'safeDeclaration' as MessageIds }],
+    errors: [{ messageId: "safeDeclaration" as MessageIds }],
   })),
 ];
 

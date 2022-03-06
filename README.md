@@ -17,11 +17,14 @@ $ npm install eslint-plugin-strict-null-check --save-dev
 To use this plugin you need to configure your eslint config with:
 
 ```json
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "plugins": [
     "strict-null-check"
   ],
   "rules": [
-    "strict-null-check/all"
+    "strict-null-check/all": "warn"
   ]
 ```
 
