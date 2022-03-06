@@ -6,10 +6,10 @@ Eslint plugin that aims to reproduce strictNullCheck from tsconfig for easier mi
 
 # Installation
 
-Install [`eslint`](https://www.github.com/eslint/eslint) and eslint-plugin-strict-null-check plugin locally.
+Install eslint-plugin-strict-null-check plugin locally.
 
 ```sh
-$ npm install eslint eslint-strict-null-check --save-dev
+$ npm install eslint-plugin-strict-null-check --save-dev
 ```
 
 # Configuration
