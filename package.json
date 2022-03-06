@@ -1,8 +1,8 @@
 {
   "name": "eslint-plugin-strict-null-check",
-  "version": "0.0.4",
+  "version": "0.0.10",
   "description": "Eslint plugin that aims to reproduce strictNullCheck from tsconfig for easier migration",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "jest",
     "build": "tsc && cp src/index.js dist/ && cp package.json dist/",

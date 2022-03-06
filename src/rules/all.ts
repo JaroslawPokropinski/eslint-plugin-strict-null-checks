@@ -5,7 +5,7 @@ import {
   isNullableType,
 } from "@typescript-eslint/type-utils";
 
-export const RULE_NAME = "strict-null-check";
+export const RULE_NAME = "all";
 export type MessageIds = "safeMemberAccess" | "safeDeclaration";
 export type Options = [];
 
