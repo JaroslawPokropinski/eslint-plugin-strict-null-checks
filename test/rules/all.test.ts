@@ -29,6 +29,11 @@ const valid = [
     const b = a?.x();
   }
   `,
+  `
+  function foo(a?: number, b?: number) {
+  }
+  foo(undefined, undefined);
+  `,
 ];
 
 const invalidStatemetsMemberAccess = [
@@ -49,6 +54,14 @@ const invalidStatemetsDeclaration = [
   `,
 ];
 
+const invalidFunctionArguments = [
+  `
+  function foo(a: number) {
+  }
+  foo(undefined);
+  `,
+];
+
 const invalid = [
   ...invalidStatemetsMemberAccess.map((st) => ({
     code: st,
@@ -57,6 +70,10 @@ const invalid = [
   ...invalidStatemetsDeclaration.map((st) => ({
     code: st,
     errors: [{ messageId: "safeDeclaration" as MessageIds }],
+  })),
+  ...invalidFunctionArguments.map((st) => ({
+    code: st,
+    errors: [{ messageId: "safeFunctionArguments" as MessageIds }],
   })),
 ];
 
