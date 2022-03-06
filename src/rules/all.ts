@@ -31,15 +31,11 @@ export default createEslintRule<Options, MessageIds>({
     const checker = parserServices.program.getTypeChecker();
     return {
       MemberExpression(node) {
-        console.log("MemberExpression");
         const objectOrgNode = parserServices.esTreeNodeToTSNodeMap.get(
           node.object
         );
         const objectType = getConstrainedTypeAtLocation(checker, objectOrgNode);
-        if (
-          isNullableType(objectType) &&
-          node.parent?.type !== "ChainExpression"
-        ) {
+        if (isNullableType(objectType) && !node.optional) {
           context.report({
             messageId: "safeMemberAccess",
             loc: node.object.loc,
