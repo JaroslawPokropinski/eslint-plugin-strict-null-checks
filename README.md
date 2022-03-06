@@ -14,7 +14,7 @@ $ npm install eslint-plugin-strict-null-check --save-dev
 
 # Configuration
 
-Use [our preset](#recommended) to get reasonable defaults:
+To use this plugin you need to configure your eslint config with:
 
 ```json
   "plugins": [
@@ -27,7 +27,7 @@ Use [our preset](#recommended) to get reasonable defaults:
 
 # License
 
-`eslint-strict-null-check` is licensed under the [MIT License](https://opensource.org/licenses/mit-license.php).
+`eslint-plugin-strict-null-check` is licensed under the [MIT License](https://opensource.org/licenses/mit-license.php).
 
 [npm-url]: https://npmjs.org/package/eslint-plugin-strict-null-check
 [npm-image]: https://img.shields.io/npm/v/eslint-plugin-strict-null-check.svg
