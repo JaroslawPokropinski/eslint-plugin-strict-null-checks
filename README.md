@@ -29,5 +29,5 @@ Use [our preset](#recommended) to get reasonable defaults:
 
 `eslint-strict-null-check` is licensed under the [MIT License](https://opensource.org/licenses/mit-license.php).
 
-[npm-url]: https://npmjs.org/package/eslint-plugin-react
+[npm-url]: https://npmjs.org/package/eslint-strict-null-check
 [npm-image]: https://img.shields.io/npm/v/eslint-strict-null-check.svg
