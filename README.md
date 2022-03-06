@@ -14,7 +14,7 @@ $ npm install eslint eslint-strict-null-check --save-dev
 
 # Configuration
 
-Use [our preset](#recommended) to get reasonable defaults:
+To use this plugin you need to configure your eslint config with:
 
 ```json
   "plugins": [
