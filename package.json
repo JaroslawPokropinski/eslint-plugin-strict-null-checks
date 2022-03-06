@@ -1,12 +1,13 @@
 {
   "name": "eslint-plugin-strict-null-check",
-  "version": "0.0.10",
+  "version": "0.0.13",
   "description": "Eslint plugin that aims to reproduce strictNullCheck from tsconfig for easier migration",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
     "build": "tsc && cp src/index.js dist/ && cp package.json dist/",
-    "build:win": "pwsh.exe -Command \"npx tsc && copy src/index.js dist/index.js && copy package.json dist/package.json\""
+    "build:win": "pwsh.exe -Command \"npx tsc && copy src/index.js dist/index.js && copy package.json dist/package.json\"",
+    "prepublishOnly": "yarn test && yarn build:win"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.13.0",

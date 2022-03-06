@@ -23,6 +23,12 @@ const valid = [
     const b = a?.x;
   }
   `,
+  `
+  function foo() {
+    const a: {x: () => number} | undefined = undefined;
+    const b = a?.x();
+  }
+  `,
 ];
 
 const invalidStatemetsMemberAccess = [
