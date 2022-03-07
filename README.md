@@ -18,7 +18,7 @@ To use this plugin you need to configure your eslint config with:
 
 ```json
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.strictNullCheck.json"
   },
   "plugins": [
     "strict-null-check"
@@ -26,6 +26,16 @@ To use this plugin you need to configure your eslint config with:
   "rules": [
     "strict-null-check/all": "warn"
   ]
+```
+
+And create `tsconfig.strictNullCheck.json` with
+
+```
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+  }
+}
 ```
 
 # License

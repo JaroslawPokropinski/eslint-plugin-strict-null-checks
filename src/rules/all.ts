@@ -52,7 +52,11 @@ export default createEslintRule<Options, MessageIds>({
           node.id
         );
         const idType = getConstrainedTypeAtLocation(checker, originalIdNode);
-        if (!isNullableType(idType) && !node.init) {
+        if (
+          !isNullableType(idType) &&
+          !node.init &&
+          node.parent?.parent?.type !== "ForOfStatement"
+        ) {
           return context.report({
             messageId: "safeDeclaration",
             loc: node.id.loc,
@@ -86,10 +90,10 @@ export default createEslintRule<Options, MessageIds>({
         const paramsInSig = signatures[0].getParameters();
 
         const nullableSig = paramsInSig.map((p) => {
-          const paramType = getConstrainedTypeAtLocation(
-            checker,
-            p.declarations[0]
-          );
+          const declaration = p.declarations?.[0];
+          if (!declaration) return false; // if cannot get declaration, assume it is not nullable
+
+          const paramType = getConstrainedTypeAtLocation(checker, declaration);
           return isNullableType(paramType);
         });
 

@@ -7,7 +7,7 @@ const root = path.resolve(path.join(__dirname, "../"));
 const ruleTester: RuleTester = new RuleTester({
   parser: require.resolve("@typescript-eslint/parser"),
   parserOptions: {
-    project: "./tsconfig.json",
+    project: "./tsconfig.strict.json",
     tsconfigRootDir: root,
   },
 });
@@ -33,6 +33,17 @@ const valid = [
   function foo(a?: number, b?: number) {
   }
   foo(undefined, undefined);
+  `,
+  `
+  function foo() {
+    const a: {x: () => number} | undefined = undefined;
+    const b = a?.x();
+  }
+  `,
+  `
+  const a = new Array<number>();
+  for (const x of a) {
+  }
   `,
 ];
 

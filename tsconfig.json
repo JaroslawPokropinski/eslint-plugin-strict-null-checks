@@ -9,7 +9,6 @@
     "strict": true,
     "noUnusedLocals": false,
     "skipLibCheck": true,
-    "strictNullChecks": false,
     "types": [
       "node"
     ]
