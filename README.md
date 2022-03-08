@@ -1,15 +1,15 @@
-# `eslint-plugin-strict-null-check`
+# `eslint-plugin-strict-null-checks`
 
 [![NPM version][npm-image]][npm-url]
 
-Eslint plugin that aims to reproduce strictNullCheck from tsconfig for easier migration and for projects that prefer to have it as a warning not an error.
+Eslint plugin that aims to reproduce strictNullChecks from tsconfig for easier migration and for projects that prefer to have it as a warning not an error.
 
 # Installation
 
-Install eslint-plugin-strict-null-check plugin locally.
+Install eslint-plugin-strict-null-checks plugin locally.
 
 ```sh
-$ npm install eslint-plugin-strict-null-check --save-dev
+$ npm install eslint-plugin-strict-null-checks --save-dev
 ```
 
 # Configuration
@@ -18,17 +18,17 @@ To use this plugin you need to configure your eslint config with:
 
 ```json
   "parserOptions": {
-    "project": "./tsconfig.strictNullCheck.json"
+    "project": "./tsconfig.strictNullChecks.json"
   },
   "plugins": [
-    "strict-null-check"
+    "strict-null-checks"
   ],
   "rules": [
-    "strict-null-check/all": "warn"
+    "strict-null-checks/all": "warn"
   ]
 ```
 
-And create `tsconfig.strictNullCheck.json` with
+And create `tsconfig.strictNullChecks.json` with
 
 ```
 {
@@ -40,7 +40,7 @@ And create `tsconfig.strictNullCheck.json` with
 
 # License
 
-`eslint-plugin-strict-null-check` is licensed under the [MIT License](https://opensource.org/licenses/mit-license.php).
+`eslint-plugin-strict-null-checks` is licensed under the [MIT License](https://opensource.org/licenses/mit-license.php).
 
-[npm-url]: https://npmjs.org/package/eslint-plugin-strict-null-check
-[npm-image]: https://img.shields.io/npm/v/eslint-plugin-strict-null-check.svg
+[npm-url]: https://npmjs.org/package/eslint-plugin-strict-null-checks
+[npm-image]: https://img.shields.io/npm/v/eslint-plugin-strict-null-checks.svg
