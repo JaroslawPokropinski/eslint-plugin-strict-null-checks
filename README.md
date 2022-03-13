@@ -38,6 +38,18 @@ And create `tsconfig.strictNullChecks.json` with
 }
 ```
 
+If you get this error:
+```
+Parsing error: "parserOptions.project" has been set for @typescript-eslint/parser.
+The file does not match your project config: .eslintrc.js.
+The file must be included in at least one of the projects provided.
+```
+
+Add this line to your ESLint config:
+```js
+ignorePatterns: ['.eslintrc.js'],
+```
+
 # License
 
 `eslint-plugin-strict-null-checks` is licensed under the [MIT License](https://opensource.org/licenses/mit-license.php).
