@@ -45,6 +45,15 @@ const valid = [
   for (const x of a) {
   }
   `,
+  `
+  const foo = (arg1?: string[]): string[] => 
+    Array.isArray(arg1) 
+        ? arg1.map((field) => \`field: \${field}\`) 
+        : [];
+  `,
+  `
+  const x: any = undefined; 
+  `
 ];
 
 const invalidStatemetsMemberAccess = [
@@ -70,6 +79,25 @@ const invalidFunctionArguments = [
   function foo(a: number) {
   }
   foo(undefined);
+  `,
+  `
+  type Dispatch<A> = (value: A) => void;
+  type SetStateAction<S> = S | ((prevState: S) => S);
+  function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>] {
+    throw new Error();
+  }
+
+  useState<number>(null);
+  `,
+  `
+  type Dispatch<A> = (value: A) => void;
+  type SetStateAction<S> = S | ((prevState: S) => S);
+  function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>] {
+    throw new Error();
+  }
+
+  const [st, setSt] = useState<number>(1);
+  setSt(null);
   `,
 ];
 

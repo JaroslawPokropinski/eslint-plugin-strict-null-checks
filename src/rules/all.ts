@@ -3,6 +3,7 @@ import { createEslintRule } from "../utils/create-eslint-rule";
 import {
   getConstrainedTypeAtLocation,
   isNullableType,
+  isTypeAnyType,
 } from "@typescript-eslint/type-utils";
 
 export const RULE_NAME = "all";
@@ -71,7 +72,7 @@ export default createEslintRule<Options, MessageIds>({
           originalInitNode
         );
 
-        if (isNullableType(initType) && !isNullableType(idType)) {
+        if (isNullableType(initType) && !(isNullableType(idType) || isTypeAnyType(idType))) {
           context.report({
             messageId: "safeDeclaration",
             loc: node.id.loc,
@@ -94,13 +95,12 @@ export default createEslintRule<Options, MessageIds>({
           if (!declaration) return false; // if cannot get declaration, assume it is not nullable
 
           const paramType = getConstrainedTypeAtLocation(checker, declaration);
-          return isNullableType(paramType);
+          return isNullableType(paramType) || isTypeAnyType(paramType);
         });
 
         const argTypes = originalNode.arguments.map((arg) =>
           getConstrainedTypeAtLocation(checker, arg)
         );
-
         const nullableParam = argTypes.map((arg) => isNullableType(arg));
 
         nullableSig.forEach((ns, i) => {
