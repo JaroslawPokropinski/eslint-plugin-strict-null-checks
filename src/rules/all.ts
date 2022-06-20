@@ -56,7 +56,7 @@ export default createEslintRule<Options, MessageIds>({
         if (
           !isNullableType(idType) &&
           !node.init &&
-          node.parent?.parent?.type !== "ForOfStatement"
+          !["ForInStatement", "ForOfStatement"].includes(node.parent?.parent?.type ?? '')
         ) {
           return context.report({
             messageId: "safeDeclaration",

@@ -53,6 +53,13 @@ const valid = [
   `,
   `
   const x: any = undefined; 
+  `,
+  `
+  const t = {
+    a: 'a'
+  };
+  for (const key in t) {
+  }
   `
 ];
 
