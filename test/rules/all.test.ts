@@ -99,6 +99,23 @@ const invalidStatemetsDeclaration = [
 
   const data: Foo = t;
   `,
+  `
+  type Foo = {
+    NullableString?: string
+    NonNullableString: string
+    NonNullableStringTwo: string
+  }
+  
+  const bar = {
+    NullableProperty: undefined,
+  }
+  
+  const data: Foo = {
+    NullableString: '',
+    NonNullableString: bar.NullableProperty?.bla, // even though we have optional chaining, undefined will still be set, the compiler/linter should know this
+    NonNullableStringTwo: bar.NullableProperty ?? '',
+  }
+  `,
 ];
 
 const invalidFunctionArguments = [
