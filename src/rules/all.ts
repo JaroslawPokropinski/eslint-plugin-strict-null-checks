@@ -5,6 +5,8 @@ import {
   isNullableType,
   isTypeAnyType,
 } from "@typescript-eslint/type-utils";
+import { SyntaxKind } from "typescript";
+import { compareTypeObjects } from "../utils/compare";
 
 export const RULE_NAME = "all";
 export type MessageIds =
@@ -48,34 +50,44 @@ export default createEslintRule<Options, MessageIds>({
           });
         }
       },
-      VariableDeclarator(node) {
-        const originalIdNode = parserServices.esTreeNodeToTSNodeMap.get(
-          node.id
-        );
-        const idType = getConstrainedTypeAtLocation(checker, originalIdNode);
+      VariableDeclarator(astNode) {
+        const tsnode = parserServices.esTreeNodeToTSNodeMap.get(astNode);
+        const identifier = tsnode.name;
+        const initializer = tsnode.initializer;
+        const idType = getConstrainedTypeAtLocation(checker, identifier);
+
+        // if variable is not nullable and not initialized and not in for each statement
         if (
           !isNullableType(idType) &&
-          !node.init &&
-          !["ForInStatement", "ForOfStatement"].includes(node.parent?.parent?.type ?? '')
+          !initializer &&
+          ![SyntaxKind.ForInStatement, SyntaxKind.ForOfStatement].includes(
+            tsnode.parent?.parent?.kind ?? ""
+          )
         ) {
           return context.report({
             messageId: "safeDeclaration",
-            loc: node.id.loc,
+            loc: astNode.id.loc,
           });
         }
-        if (!node.init) return;
-        const originalInitNode = parserServices.esTreeNodeToTSNodeMap.get(
-          node.init
-        );
-        const initType = getConstrainedTypeAtLocation(
-          checker,
-          originalInitNode
-        );
+        if (!initializer) return;
+        const initType = getConstrainedTypeAtLocation(checker, initializer);
 
-        if (isNullableType(initType) && !(isNullableType(idType) || isTypeAnyType(idType))) {
-          context.report({
+        // if variable is initialized by null (unless it is nullable or any)
+        if (
+          isNullableType(initType) &&
+          !(isNullableType(idType) || isTypeAnyType(idType))
+        ) {
+          return context.report({
             messageId: "safeDeclaration",
-            loc: node.id.loc,
+            loc: astNode.id.loc,
+          });
+        }
+
+        // handle declaration of objects
+        if (!compareTypeObjects(idType, initType, checker)) {
+          return context.report({
+            messageId: "safeDeclaration",
+            loc: astNode.init?.loc ?? astNode.id.loc,
           });
         }
       },

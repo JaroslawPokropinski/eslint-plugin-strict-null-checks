@@ -60,7 +60,7 @@ const valid = [
   };
   for (const key in t) {
   }
-  `
+  `,
 ];
 
 const invalidStatemetsMemberAccess = [
@@ -78,6 +78,26 @@ const invalidStatemetsDeclaration = [
     const a: {x: number} | undefined = undefined;
     const b: {x: number} = a;
   }
+  `,
+  `
+  type Foo = {
+    NonNullableString: string
+  }
+  
+  const t: {x: string} | undefined = undefined;
+
+  const data: Foo = {
+    NonNullableString: t?.x, // even though we have optional chaining, undefined will still be set, the compiler/linter should know this
+  }
+  `,
+  `
+  type Foo = {
+    NonNullableString: string
+  }
+  
+  const t = {NonNullableString: undefined};
+
+  const data: Foo = t;
   `,
 ];
 
@@ -124,6 +144,6 @@ const invalid = [
 ];
 
 ruleTester.run(RULE_NAME, rule, {
-  valid,
+  valid: [],
   invalid,
 });
