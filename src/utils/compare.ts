@@ -15,8 +15,13 @@ import { hasOnlyExpressionInitializer, Type, TypeChecker } from "typescript";
 export function compareTypeObjects(
   left: Type,
   right: Type,
-  checker: TypeChecker
+  checker: TypeChecker,
+  recursionStack?: any[] = []
 ) {
+  if (recursionStack.includes(left)) {
+    return true;
+  }
+  recursionStack.push(left);
   for (let leftProperty of left.getProperties()) {
     // handle only case where leftProperty.valueDeclaration is prop signature for now
     if (!leftProperty.valueDeclaration) continue;
