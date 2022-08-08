@@ -53,7 +53,7 @@ export function compareTypeObjects(
 
     if (isNullableType(rightPropertyType)) return false;
     // if (isTypeAnyType(rightPropertyType)) return false;
-    if (!compareTypeObjects(leftPropertyType, rightPropertyType, checker))
+    if (!compareTypeObjects(leftPropertyType, rightPropertyType, checker, recursionStack))
       return false;
   }
 
