@@ -11,7 +11,7 @@ const ruleTester: RuleTester = new RuleTester({
     tsconfigRootDir: root,
   },
 });
-const valid = [
+const validStatements = [
   `
   function foo() {
     const a = 1 as number | undefined;
@@ -128,6 +128,10 @@ const invalidFunctionArguments = [
   `,
 ];
 
+const valid = validStatements.map((st) => ({
+  code: st,
+}));
+
 const invalid = [
   ...invalidStatemetsMemberAccess.map((st) => ({
     code: st,
@@ -144,6 +148,6 @@ const invalid = [
 ];
 
 ruleTester.run(RULE_NAME, rule, {
-  valid: [],
+  valid,
   invalid,
 });
