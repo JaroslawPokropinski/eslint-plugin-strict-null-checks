@@ -61,6 +61,16 @@ const validStatements = [
   for (const key in t) {
   }
   `,
+  `
+  type Dispatch<A> = (value: A) => void;
+  type SetStateAction<S> = S | ((prevState: S) => S);
+  function useState<S>(): [S | undefined, Dispatch<SetStateAction<S | undefined>>] {
+    throw new Error();
+  }
+
+  const [st, setSt] = useState<number>();
+  setSt(undefined);
+  `,
 ];
 
 const invalidStatemetsMemberAccess = [
