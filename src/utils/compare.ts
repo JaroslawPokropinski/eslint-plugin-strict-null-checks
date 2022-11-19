@@ -16,7 +16,7 @@ export function compareTypeObjects(
   left: Type,
   right: Type,
   checker: TypeChecker,
-  recursionStack?: any[] = []
+  recursionStack: any[] = []
 ) {
   if (recursionStack.includes(left)) {
     return true;

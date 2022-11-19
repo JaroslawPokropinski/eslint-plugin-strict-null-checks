@@ -93,20 +93,16 @@ export default createEslintRule<Options, MessageIds>({
       },
       CallExpression(node) {
         const originalNode = parserServices.esTreeNodeToTSNodeMap.get(node);
-        const expressionType = getConstrainedTypeAtLocation(
-          checker,
-          originalNode.expression
-        );
-        const signatures = expressionType.getCallSignatures();
-        if (signatures.length !== 1) return;
+        const signature = checker.getResolvedSignature(originalNode);
+        if (!signature) return;
 
-        const paramsInSig = signatures[0].getParameters();
+        const paramsInSig = signature.getParameters();
 
         const nullableSig = paramsInSig.map((p) => {
           const declaration = p.declarations?.[0];
           if (!declaration) return false; // if cannot get declaration, assume it is not nullable
 
-          const paramType = getConstrainedTypeAtLocation(checker, declaration);
+          const paramType = checker.getTypeOfSymbolAtLocation(p, declaration);
           return isNullableType(paramType) || isTypeAnyType(paramType);
         });
 
