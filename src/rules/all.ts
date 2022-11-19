@@ -20,17 +20,17 @@ export default createEslintRule<Options, MessageIds>({
   meta: {
     type: "problem",
     docs: {
-      description: "force strict null checks",
+      description: "Enforce strict null checks",
       recommended: "warn",
     },
     schema: [],
     messages: {
       safeMemberAccess:
-        "Accessing member of nullable variable should be done using chain expression (?.)",
+          "Member is possibly nullish and should be checked. Consider accessing the member using the optional chaining operator (?.)",
       safeDeclaration:
-        "Assigning nullable value to non nullable variable (you may use ?? for default value)",
+          "A nullish value shouldn't be assigned to a non-nullish type.",
       safeFunctionArguments:
-        "Passing nullable argument to function that expects non nullable",
+          "Don't pass nullish arguments to a function that expects a non-nullish type.",
     },
   },
   defaultOptions: [],
