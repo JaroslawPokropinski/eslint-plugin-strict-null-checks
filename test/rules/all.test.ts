@@ -61,6 +61,18 @@ const validStatements = [
   for (const key in t) {
   }
   `,
+  // test for infinite recursion issue https://github.com/JaroslawPokropinski/eslint-plugin-strict-null-checks/issues/13
+  `
+  interface ISmRequest<TParams, TRequest> {
+    params: TParams;
+    request: TRequest;
+  }
+  const req = {
+    params: 0,
+    request: null
+  };
+  const smReq = req as ISmRequest<number, string>;
+  `,
   `
   type Dispatch<A> = (value: A) => void;
   type SetStateAction<S> = S | ((prevState: S) => S);
