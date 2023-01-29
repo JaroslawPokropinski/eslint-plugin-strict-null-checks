@@ -23,9 +23,9 @@ To use this plugin you need to configure your eslint config with:
   "plugins": [
     "strict-null-checks"
   ],
-  "rules": [
+  "rules": {
     "strict-null-checks/all": "warn"
-  ]
+  }
 ```
 
 And create `tsconfig.strictNullChecks.json` with
