@@ -26,11 +26,11 @@ export default createEslintRule<Options, MessageIds>({
     schema: [],
     messages: {
       safeMemberAccess:
-          "Member is possibly nullish and should be checked. Consider accessing the member using the optional chaining operator (?.)",
+        "Member is possibly nullish and should be checked. Consider accessing the member using the optional chaining operator (?.)",
       safeDeclaration:
-          "A nullish value shouldn't be assigned to a non-nullish type.",
+        "A nullish value shouldn't be assigned to a non-nullish type.",
       safeFunctionArguments:
-          "Don't pass nullish arguments to a function that expects a non-nullish type.",
+        "Don't pass nullish arguments to a function that expects a non-nullish type.",
     },
   },
   defaultOptions: [],
@@ -75,7 +75,7 @@ export default createEslintRule<Options, MessageIds>({
         // if variable is initialized by null (unless it is nullable or any)
         if (
           isNullableType(initType) &&
-          !(isNullableType(idType) || isTypeAnyType(idType))
+          !isNullableType(idType, { isReceiver: true })
         ) {
           return context.report({
             messageId: "safeDeclaration",
@@ -103,7 +103,7 @@ export default createEslintRule<Options, MessageIds>({
           if (!declaration) return false; // if cannot get declaration, assume it is not nullable
 
           const paramType = checker.getTypeOfSymbolAtLocation(p, declaration);
-          return isNullableType(paramType) || isTypeAnyType(paramType);
+          return isNullableType(paramType, { isReceiver: true });
         });
 
         const argTypes = originalNode.arguments.map((arg) =>
