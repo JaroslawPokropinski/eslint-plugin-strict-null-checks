@@ -6,4 +6,5 @@ module.exports = {
       isolatedModules: true,
     },
   },
+  transformIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/dist/"],
 };

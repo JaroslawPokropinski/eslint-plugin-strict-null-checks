@@ -11,7 +11,7 @@ const ruleTester: RuleTester = new RuleTester({
     tsconfigRootDir: root,
   },
 });
-const validStatements = [
+const generalValidStatements = [
   `
   function foo() {
     const a = 1 as number | undefined;
@@ -83,7 +83,7 @@ const validStatements = [
   const [st, setSt] = useState<number>();
   setSt(undefined);
   `,
-];
+].map((st) => ({ name: "general valid", code: st }));
 
 const invalidStatemetsMemberAccess = [
   `
@@ -167,9 +167,24 @@ const invalidFunctionArguments = [
   `,
 ];
 
-const valid = validStatements.map((st) => ({
-  code: st,
-}));
+/**
+ * Passing nullable to a function accepting those should not give a warning.
+ * issue @link https://github.com/JaroslawPokropinski/eslint-plugin-strict-null-checks/issues/19
+ */
+const validCallNullableArg = [
+  {
+    name: "valid call with undefined",
+    code: `
+    // test for issue 19
+    function foo(v: unknown): unknown {
+      return v;
+    }
+    foo(undefined);
+    `,
+  },
+];
+
+const valid = [...generalValidStatements, ...validCallNullableArg];
 
 const invalid = [
   ...invalidStatemetsMemberAccess.map((st) => ({
