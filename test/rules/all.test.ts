@@ -15,34 +15,41 @@ const generalValidStatements = [
   `
   function foo() {
     const a = 1 as number | undefined;
+    a
   }
   `,
   `
   function foo() {
-    const a: {x: number} | undefined = undefined;
+    const a = undefined as  {x: number} | undefined;
     const b = a?.x;
+    b
   }
   `,
   `
   function foo() {
-    const a: {x: () => number} | undefined = undefined;
+    const a = undefined as {x: () => number} | undefined;
     const b = a?.x();
+    b
   }
   `,
   `
   function foo(a?: number, b?: number) {
+    a
+    b
   }
   foo(undefined, undefined);
   `,
   `
   function foo() {
-    const a: {x: () => number} | undefined = undefined;
+    const a = undefined as {x: () => number} | undefined;
     const b = a?.x();
+    b
   }
   `,
   `
   const a = new Array<number>();
   for (const x of a) {
+    x
   }
   `,
   `
@@ -59,6 +66,7 @@ const generalValidStatements = [
     a: 'a'
   };
   for (const key in t) {
+    key
   }
   `,
   // test for infinite recursion issue https://github.com/JaroslawPokropinski/eslint-plugin-strict-null-checks/issues/13
@@ -71,7 +79,7 @@ const generalValidStatements = [
     params: 0,
     request: null
   };
-  const smReq = req as ISmRequest<number, string>;
+  const smReq = req as unknown as ISmRequest<number, string>;
   `,
   `
   type Dispatch<A> = (value: A) => void;
@@ -83,13 +91,30 @@ const generalValidStatements = [
   const [st, setSt] = useState<number>();
   setSt(undefined);
   `,
-].map((st) => ({ name: "general valid", code: st }));
+].map((st, i) => ({ name: `general valid ${i}`, code: st }));
+
+const otherValidStatements = [
+  {
+    name: "with assert non nullable",
+    code: `
+    let app: {val: number};
+    function beforeAll() {
+      app = {val: 0}
+    }
+
+    function afterAll() {
+      console.log(app.val)
+    }
+    `,
+  },
+];
 
 const invalidStatemetsMemberAccess = [
   `
   function foo() {
     const a: {x: number} | undefined = undefined;
     const b: number = a.x;
+    b
   }
   `,
 ];
@@ -97,8 +122,9 @@ const invalidStatemetsMemberAccess = [
 const invalidStatemetsDeclaration = [
   `
   function foo() {
-    const a: {x: number} | undefined = undefined;
+    const a = undefined as {x: number} | undefined;
     const b: {x: number} = a;
+    b
   }
   `,
   `
@@ -106,7 +132,7 @@ const invalidStatemetsDeclaration = [
     NonNullableString: string
   }
   
-  const t: {x: string} | undefined = undefined;
+  const t = undefined as {x: string} | undefined;
 
   const data: Foo = {
     NonNullableString: t?.x, // even though we have optional chaining, undefined will still be set, the compiler/linter should know this
@@ -120,6 +146,7 @@ const invalidStatemetsDeclaration = [
   const t = {NonNullableString: undefined};
 
   const data: Foo = t;
+  data
   `,
   `
   type Foo = {
@@ -137,6 +164,7 @@ const invalidStatemetsDeclaration = [
     NonNullableString: bar.NullableProperty?.bla, // even though we have optional chaining, undefined will still be set, the compiler/linter should know this
     NonNullableStringTwo: bar.NullableProperty ?? '',
   }
+  data
   `,
 ];
 
@@ -150,6 +178,7 @@ const invalidFunctionArguments = [
   type Dispatch<A> = (value: A) => void;
   type SetStateAction<S> = S | ((prevState: S) => S);
   function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>] {
+    initialState
     throw new Error();
   }
 
@@ -159,12 +188,28 @@ const invalidFunctionArguments = [
   type Dispatch<A> = (value: A) => void;
   type SetStateAction<S> = S | ((prevState: S) => S);
   function useState<S>(initialState: S | (() => S)): [S, Dispatch<SetStateAction<S>>] {
+    initialState
     throw new Error();
   }
 
   const [st, setSt] = useState<number>(1);
   setSt(null);
   `,
+];
+
+const otherInvalidStatements = [
+  {
+    name: "passed nullable function",
+    code: `
+    type Fn = (() => void) | undefined;
+
+    const boo = (fn?: Fn) => {
+      fn();
+    };
+
+    boo();
+    `,
+  },
 ];
 
 /**
@@ -184,20 +229,28 @@ const validCallNullableArg = [
   },
 ];
 
-const valid = [...generalValidStatements, ...validCallNullableArg];
+const valid = [
+  ...generalValidStatements,
+  ...otherValidStatements,
+  ...validCallNullableArg,
+];
 
 const invalid = [
   ...invalidStatemetsMemberAccess.map((st) => ({
     code: st,
-    errors: [{ messageId: "safeMemberAccess" as MessageIds }],
+    errors: [{ messageId: "typescriptError" as const }],
   })),
   ...invalidStatemetsDeclaration.map((st) => ({
     code: st,
-    errors: [{ messageId: "safeDeclaration" as MessageIds }],
+    errors: [{ messageId: "typescriptError" as const }],
   })),
   ...invalidFunctionArguments.map((st) => ({
     code: st,
-    errors: [{ messageId: "safeFunctionArguments" as MessageIds }],
+    errors: [{ messageId: "typescriptError" as const }],
+  })),
+  ...otherInvalidStatements.map((st) => ({
+    ...st,
+    errors: [{ messageId: "typescriptError" as const }],
   })),
 ];
 

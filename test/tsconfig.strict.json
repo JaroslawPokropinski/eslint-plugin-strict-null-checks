@@ -5,9 +5,7 @@
     "sourceMap": false,
     "outDir": "dist",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "noUnusedLocals": true,
     "strictNullChecks": true,
     "skipLibCheck": true,
     "types": [
