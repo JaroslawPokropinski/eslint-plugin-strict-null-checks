@@ -27,9 +27,14 @@ export default createEslintRule<Options, MessageIds>({
     return {
       Program(astNode) {
         const semErrors = parserServices.program.getSemanticDiagnostics();
-        const code = parserServices.esTreeNodeToTSNodeMap.get(astNode).text;
+        const tsNode = parserServices.esTreeNodeToTSNodeMap.get(astNode);
+        const code = tsNode.text;
 
         semErrors.forEach((error) => {
+          // Only report errors in the current file.
+          if (!error.file || error.file.fileName !== tsNode.fileName) {
+            return;
+          }
           if (error.reportsUnnecessary) return;
           if (error.category !== DiagnosticCategory.Error) return;
 
