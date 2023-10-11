@@ -1,4 +1,7 @@
-import { RuleTester } from "@typescript-eslint/utils/dist/ts-eslint";
+import {
+  RuleTester,
+  InvalidTestCase,
+} from "@typescript-eslint/utils/dist/ts-eslint";
 import path from "path";
 import rule, { MessageIds, RULE_NAME } from "../../src/rules/all";
 
@@ -11,6 +14,13 @@ const ruleTester: RuleTester = new RuleTester({
     tsconfigRootDir: root,
   },
 });
+
+type InvalidTestCaseWithOptionalErr = Omit<
+  InvalidTestCase<"typescriptError", []>,
+  "errors"
+> &
+  Partial<Pick<InvalidTestCase<"typescriptError", []>, "errors">>;
+
 const generalValidStatements = [
   `
   function foo() {
@@ -197,7 +207,7 @@ const invalidFunctionArguments = [
   `,
 ];
 
-const otherInvalidStatements = [
+const otherInvalidStatements: InvalidTestCaseWithOptionalErr[] = [
   {
     name: "passed nullable function",
     code: `
@@ -209,6 +219,31 @@ const otherInvalidStatements = [
 
     boo();
     `,
+  },
+  {
+    name: "error with chain",
+    code: `
+    const temp: () => Promise<string> = async () => {
+      const test: {
+        name: string | null;
+      } = {
+        name: null,
+      };
+    
+      return test.name;
+    };
+    
+    export default temp;
+    `,
+    errors: [
+      {
+        messageId: "typescriptError" as const,
+        data: {
+          errorMessage:
+            "Type '() => Promise<string | null>' is not assignable to type '() => Promise<string>'.",
+        },
+      },
+    ],
   },
 ];
 
@@ -249,8 +284,8 @@ const invalid = [
     errors: [{ messageId: "typescriptError" as const }],
   })),
   ...otherInvalidStatements.map((st) => ({
-    ...st,
     errors: [{ messageId: "typescriptError" as const }],
+    ...st,
   })),
 ];
 

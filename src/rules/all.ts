@@ -38,9 +38,14 @@ export default createEslintRule<Options, MessageIds>({
           if (error.reportsUnnecessary) return;
           if (error.category !== DiagnosticCategory.Error) return;
 
+          const firstMessageInChain =
+            typeof error.messageText === "string"
+              ? error.messageText
+              : error.messageText.messageText;
+
           context.report({
             messageId: "typescriptError",
-            data: { errorMessage: error.messageText },
+            data: { errorMessage: firstMessageInChain },
             loc: posToLoc(code, error.start!, error.start! + error.length!),
           });
         });
