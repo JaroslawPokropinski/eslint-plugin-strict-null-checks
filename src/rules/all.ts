@@ -26,8 +26,8 @@ export default createEslintRule<Options, MessageIds>({
 
     return {
       Program(astNode) {
-        const semErrors = parserServices.program.getSemanticDiagnostics();
         const tsNode = parserServices.esTreeNodeToTSNodeMap.get(astNode);
+        const semErrors = parserServices.program.getSemanticDiagnostics(tsNode);
         const code = tsNode.text;
 
         semErrors.forEach((error) => {
